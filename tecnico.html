@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Detalle técnico · Martí Expósito Rocher</title>
+<meta name="description" content="Arquitectura, decisiones y método de trabajo detrás de los proyectos de Martí Expósito Rocher, desarrollador full stack Java.">
+<meta property="og:title" content="Detalle técnico · Martí Expósito Rocher">
+<meta property="og:description" content="Arquitectura, decisiones con su porqué y método de trabajo con IA.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<nav class="top" aria-label="Secciones">
+  <div class="wrap">
+    <a class="me" href="index.html">← Martí Expósito</a>
+    <a href="#consultoria">Consultoría</a>
+    <a href="#producto">Producto propio</a>
+    <a href="#metodo">Método</a>
+    <a href="index.html#contacto">Contacto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero" id="inicio">
+    <p class="label">Detalle técnico · Para entrevistas</p>
+    <h1>Cómo está hecho y por qué.</h1>
+    <p class="lede">Arquitectura, decisiones con su porqué y forma de trabajar detrás de cada proyecto. Los clientes de consultoría van anonimizados y el código es privado, pero lo enseño en una entrevista.</p>
+    <div class="actions">
+      <a class="btn" href="index.html">← Volver al resumen</a>
+      <a class="btn" href="index.html#contacto">Contacto y CV</a>
+    </div>
+  </header>
+
+  <section id="consultoria">
+    <div class="head"><h2>Consultoría</h2><p>DISID, desde 2024. Equipos Scrum con clientes del sector público y privado.</p></div>
+
+    <article class="tech-case" id="cms">
+      <header>
+        <span class="tag work">Consultoría · seguros</span>
+        <h3>CMS de una plataforma de seguros</h3>
+        <p class="one">Backend del gestor de contenidos de un producto digital de seguros. Lo desarrollé junto a un compañero senior, en coordinación directa con frontend, el equipo de integración y QA.</p>
+      </header>
+      <div class="tech">
+        <div><h4>Arquitectura</h4><p>Servicio en Quarkus y Java 21 sobre PostgreSQL, con el esquema versionado con Flyway y desplegado en AWS. Está desacoplado de los sistemas corporativos: la integración con el CRM pasa por una capa de MuleSoft, que entrega al backend la identidad del usuario ya validada. El backend solo guarda lo que es suyo y no replica datos del CRM.</p></div>
+        <div><h4>APIs por contrato</h4><p>Reorganicé la API en tres contratos OpenAPI separados por consumidor: la app, el propio CMS y la integración. Analicé la divergencia entre ramas que había desalineado la documentación entre equipos y la volví a dejar como fuente única de verdad.</p></div>
+        <div><h4>Criterio de operación</h4><p>Propuse tres mejoras, cada una por un riesgo concreto. Con varias réplicas, migrar la base de datos al arrancar cada contenedor es peligroso, así que las migraciones van al pipeline CI/CD. Un pool sin dimensionar agota las conexiones de la base de datos. Y la etiqueta <code>latest</code> impide saber qué versión está corriendo, así que las imágenes se versionan.</p></div>
+        <div><h4>Observabilidad y equipo</h4><p>Métricas con Micrometer y Prometheus a petición de QA. Documenté la conexión al entorno de desarrollo en AWS (VPN y gestión de secretos), los procesos, la planificación de sprints y el onboarding.</p></div>
+      </div>
+      <ul class="chips"><li>Java 21</li><li>Quarkus</li><li>PostgreSQL</li><li>Flyway</li><li>OpenAPI</li><li>MuleSoft</li><li>AWS</li><li>Micrometer · Prometheus</li></ul>
+    </article>
+
+    <article class="tech-case" id="residuos">
+      <header>
+        <span class="tag work">Consultoría · administración local</span>
+        <h3>Plataforma municipal de residuos y limpieza</h3>
+        <p class="one">Aplicación en producción con la que un servicio municipal planifica y ejecuta la recogida de residuos y la limpieza viaria. Los equipos de campo la usan a diario desde tablets en los vehículos. Trabajé en ella como full stack en un equipo Scrum, en dos etapas.</p>
+      </header>
+      <div class="tech">
+        <div><h4>Arquitectura</h4><p>Monolito multicapa (controladores, servicios y persistencia) con Spring Boot y Maven. Interfaz renderizada en servidor con Thymeleaf y JavaScript, y PostgreSQL como base de datos.</p></div>
+        <div><h4>Integración por API REST</h4><p>Amplié la API de incidencias y tareas para que otros sistemas consulten, adjunten y descarguen documentos e imágenes. Definí las casuísticas de subida y el resumen de códigos de respuesta, con un límite por petición para proteger el servicio.</p></div>
+        <div><h4>Trabajo de campo</h4><p>Identificación de contenedores y elementos escaneando su código DataMatrix/QR desde la tablet, módulo de incidencias web e interfaz adaptada al uso táctil. Los errores propios del dispositivo los diagnosticaba sobre el ciclo de vida de la página en la tablet, no solo en el escritorio.</p></div>
+        <div><h4>Calidad y flujo de equipo</h4><p>Pruebas con JUnit y Mockito, y verificación en los dispositivos de campo. En GitLab, una rama por tarea desde la base del sprint, merge requests y una rama de integración por versión. Los conflictos entre ramas que tocaban clases comunes los resolvía con merges secuenciales sin fast-forward, para no perder la trazabilidad.</p></div>
+      </div>
+      <ul class="chips"><li>Java</li><li>Spring Boot</li><li>Spring MVC</li><li>Thymeleaf</li><li>REST</li><li>PostgreSQL</li><li>JUnit · Mockito</li><li>GitLab CI/CD</li><li>Docker</li></ul>
+    </article>
+  </section>
+
+  <section id="producto">
+    <div class="head"><h2>Producto propio</h2><p>Aplicaciones que diseño, despliego y mantengo yo, con usuarios reales.</p></div>
+
+    <article class="tech-case" id="restauracion">
+      <header>
+        <span class="tag">En producción desde mayo de 2026</span>
+        <h3>Restauración: mesas, comandas y cobros</h3>
+        <p class="one">PWA que usan a diario los camareros de una cafetería con clientes delante, adaptada después a un pub que la puso en producción al día siguiente. Análisis, desarrollo, despliegue y soporte.</p>
+      </header>
+      <div class="tech">
+        <div><h4>Seguridad</h4><p>Una cuenta por trabajador. El rol se lee del mismo sitio que usan las reglas de la base de datos, para que lo que muestra la pantalla y lo que se permite nunca discrepen. Las reglas se prueban con tests contra un emulador antes de desplegarlas. Cobros, fichajes y registro de acciones son inmutables (solo se crean), lo que deja un rastro de auditoría completo.</p></div>
+        <div><h4>Fiabilidad</h4><p>La impresión de tickets prueba la red local, luego un túnel y, si todo falla, deja el trabajo en una cola que atiende un puente permanente en el local. La carga inicial se aligeró para no descargar el historial al arrancar.</p></div>
+        <div><h4>Pruebas sin riesgo</h4><p>Un modo con base de datos en memoria permite probar todo el camino del dinero sin tocar el bar, y nunca entra en el build de producción. Tests sobre precios, reparto de la cuenta, carta y permisos.</p></div>
+        <div><h4>Reglas del dominio</h4><p>La jornada de un bar acaba a las 02:00, no a medianoche: a la 01:30 las ventas siguen siendo de «hoy». Está escrito en las reglas del proyecto porque es la fuente clásica de errores de fecha.</p></div>
+        <div><h4>Decisión: no construir la facturación</h4><p>Estudié la normativa Verifactu (RD 1007/2023) y recomendé usar un TPV certificado y dejar la app para mesas, comandas y fichajes. La responsabilidad legal la firma el negocio, con sanciones de hasta 50.000 € por ejercicio; la norma ha cambiado varias veces en poco tiempo y ya existe software certificado.</p></div>
+        <div><h4>Decisión: un repositorio por local</h4><p>Más rápido de arrancar el segundo negocio, a cambio de trasladar los arreglos a mano entre repositorios. Está documentado cuándo convendría pasar a una plataforma común.</p></div>
+      </div>
+      <ul class="chips"><li>React 19</li><li>Firebase</li><li>Reglas de Firestore</li><li>Zustand</li><li>PWA</li><li>Vitest</li><li>Impresión ESC/POS</li></ul>
+    </article>
+
+    <article class="tech-case" id="soroll">
+      <header>
+        <span class="tag dev">En desarrollo</span>
+        <h3>SOROLL: plataforma para artistas musicales</h3>
+        <p class="one">Producto multiusuario desde cero para centralizar el trabajo de un artista: canciones, versiones de audio, tareas, calendario, colaboradores y presupuesto.</p>
+      </header>
+      <div class="tech">
+        <div><h4>Audio sin pasar por el servidor</h4><p>El navegador sube directo al almacenamiento con URLs firmadas que caducan. Los originales nunca se sobrescriben, las versiones (idea, demo, mezcla, máster) se comparan A/B y la reproducción admite peticiones parciales para Safari.</p></div>
+        <div><h4>Autenticación y autorización propias</h4><p>Contraseñas con scrypt, sesiones guardadas en base de datos solo como hash y aislamiento de datos por usuario, verificado con tests que comprueban que nadie ve datos de otro. Validación de entradas con zod.</p></div>
+        <div><h4>Motor de rimas en español</h4><p>Unas 74.000 palabras, rima consonante y asonante, sílabas por verso y esquema de rima. La métrica está contrastada con versos de Bécquer, Lorca o Garcilaso. Corre entero en el navegador, sin coste de servidor.</p></div>
+        <div><h4>Armonías vocales</h4><p>A partir de una grabación, detecta el tono con el algoritmo YIN y genera voces a intervalos con PSOLA, que conserva el timbre y la duración. Exporta WAV de 24 bits alineados para Logic Pro. Es procesado de señal, no IA.</p></div>
+        <div><h4>Medir sin sesgo</h4><p>Una cata a ciegas compara el resultado con otras herramientas, con el volumen igualado (lo más fuerte suele parecer mejor) y orden aleatorio. La calidad con voces reales está aún por medir, y así se indica.</p></div>
+        <div><h4>Calendario y estado real</h4><p>Suscripción desde Apple y Google Calendar con un enlace secreto regenerable, validada con un intérprete iCal independiente. El README marca cada función como «funciona» o «sin probar en un dispositivo real».</p></div>
+      </div>
+      <ul class="chips"><li>Next.js 16</li><li>TypeScript</li><li>Postgres</li><li>Drizzle</li><li>Cloudflare R2</li><li>zod</li><li>Web Audio</li></ul>
+    </article>
+
+    <article class="tech-case" id="peluqueria">
+      <header>
+        <span class="tag">En producción desde septiembre de 2026</span>
+        <h3>Peluquería: agenda de una autónoma</h3>
+        <p class="one">Agenda de citas, clientes y servicios, desde cero, para una profesional que lo gestiona todo sola.</p>
+      </header>
+      <div class="tech">
+        <div><h4>Capa de datos intercambiable</h4><p>El acceso a datos está detrás de una interfaz con dos implementaciones, en memoria o en la nube, elegidas por configuración. Así se desarrolla y se prueba sin tocar los datos reales de la clienta.</p></div>
+        <div><h4>Criterio normativo</h4><p>El modelo ya está listo para facturar: datos fiscales, numeración correlativa por serie y desglose de IVA cubierto con tests. Comparé lo que exige Verifactu (registros encadenados con huella, QR, formato XML) con su volumen de facturación, muy bajo, y propuse una herramienta certificada para las facturas sueltas. La decisión final se toma con su gestoría.</p></div>
+      </div>
+      <ul class="chips"><li>React 19</li><li>Firebase</li><li>Tailwind</li><li>Vitest</li><li>PWA</li></ul>
+    </article>
+  </section>
+
+  <section id="metodo">
+    <div class="head">
+      <h2>Método de trabajo con IA</h2>
+      <p>Desarrollo a diario con agentes de IA, principalmente Claude Code. Cada proyecto arranca con las mismas reglas escritas, y las que se pueden forzar se fuerzan por configuración, no por buena voluntad.</p>
+    </div>
+
+    <ol class="flow">
+      <li><h3>Arranque</h3><p>Repositorio, despliegue automático, modo de pruebas con datos falsos y reglas del proyecto desde el primer commit.</p></li>
+      <li><h3>Cada cambio, documentado</h3><p>Qué cambia para quien usa la app, por qué, cómo se ha probado y cómo se revierte. Código y documentación en commits separados.</p></li>
+      <li><h3>Probar sin riesgo</h3><p>Entorno con datos simulados, separado de producción, y tests donde un fallo cuesta dinero o seguridad.</p></li>
+      <li><h3>Desplegar con criterio</h3><p>En el momento que menos afecta al negocio, con la versión visible en la app y la vuelta atrás preparada.</p></li>
+    </ol>
+
+    <div class="rules">
+      <div>
+        <h3>Reglas que la IA no se salta</h3>
+        <ul>
+          <li><b>Lo que va a producción lo confirmo yo:</b> desplegar, cambiar reglas de la base de datos y lanzar scripts que tocan datos reales piden siempre mi aprobación.</li>
+          <li><b>Lo peligroso está bloqueado:</b> añadir ficheros en bloque al commit o leer credenciales está prohibido por configuración.</li>
+          <li><b>Un tema, un documento:</b> cada fichero de documentación manda sobre una sola cosa, y hay una única lista de pendientes por proyecto.</li>
+          <li><b>El estado real, no el deseado:</b> lo que no se ha probado en el dispositivo de verdad se marca como tal.</li>
+          <li><b>Tests donde duele:</b> dinero, fechas, permisos y reglas de acceso. No se persigue la cobertura por la cobertura.</li>
+        </ul>
+      </div>
+      <div>
+        <pre class="cfg" aria-label="Extracto de configuración de permisos"><span class="c">// .claude/settings.json, en cada proyecto</span>
+{
+  <span class="k">"permissions"</span>: {
+    <span class="k">"ask"</span>: [
+      "Bash(git push*)",
+      "Bash(firebase deploy*)",
+      "Bash(node scripts/*)",
+      "Bash(git reset --hard*)"
+    ],
+    <span class="k">"deny"</span>: [
+      "Bash(git add .)",
+      "Bash(git commit -a*)",
+      "Read(**/serviceAccount.json)",
+      "Read(**/.env*)"
+    ]
+  }
+}</pre>
+        <p class="cfg-cap">Extracto real. <code>ask</code>: necesita mi confirmación. <code>deny</code>: no se puede hacer.</p>
+      </div>
+    </div>
+
+    <p class="note"><b>Lo que no está aquí:</b> las plantillas, las reglas completas y cómo se monta todo en un proyecto nuevo. Eso lo enseño en una entrevista.</p>
+  </section>
+
+  <footer>Martí Expósito Rocher · Valencia · <a href="index.html">Volver al resumen</a></footer>
+</div>
+
+</body>
+</html>
